@@ -1,0 +1,11 @@
+# Node.js
+node_modules/
+.env
+.DS_Store
+*.log
+
+# VS Code
+.vscode/
+
+# OS files
+Thumbs.db
