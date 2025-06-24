@@ -1,8 +1,11 @@
 import React from 'react';
-import {Link } from 'react-router-dom';
-import { ShoppingCartIcon } from 'lucide-react';
+import {Link , useLocation} from 'react-router-dom';
+import { ShoppingBagIcon, ShoppingCartIcon } from 'lucide-react';
+import ThemeSelector from './ThemeSelector';
 
 function NavBar() {
+  const {pathname} = useLocation()
+  const isHomePage = pathname === "/"
   return (
     <div className="bg-base-100/80 backdrop-blur-lg border-b border-base-content/10 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto">
@@ -18,7 +21,23 @@ function NavBar() {
             </div>
           </Link>
         </div>
+            {/*right*/}
+            <div className="flex items-center gap-4">
+                <ThemeSelector />
 
+                {isHomePage && (
+                  <div className="indicator">
+                    <div className="p-2 rounded-full hover:bg-base-200 transition-colors">
+                      <ShoppingBagIcon className="size-5" />
+                      <span className = "badge badge-sm badge-primary indicator-item">
+                        8
+                      </span>
+
+                    </div>
+
+                  </div>
+                )}
+            </div>
         </div>
         </div>
       </div>
