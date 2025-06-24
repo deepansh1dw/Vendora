@@ -5,6 +5,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import productRoutes from "./routes/productRoutes.js";
 import {sql} from "./config/db.js";
+import { aj } from "./Library/arcjet.js";
 
 dotenv.config();
 const app = express();
@@ -13,8 +14,35 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(cors());
-app.use(helmet()); //helmet is a security middleware that helps you protect your app by setting various HTTP headers
-app.use(morgan("dev")); // log the requests
+app.use(helmet()); 
+app.use(morgan("dev")); 
+
+app.use(async (req, res, next) => {
+  try {
+    const decision = await aj.protect(req, {
+        requested:1
+    })
+
+    if(decision.isDenied()){
+        if(decision.reason.isRateLimit()){
+            res.status(429).json({
+                error : "Rate limit exceeded. Please try again later."
+            });
+            }else if(decision.reason.isBot()){
+                res.status(403).json({ error: "Access denied for bots." });       
+            }else{
+                res.status(403).json({ error: "forbidden" });
+            }
+        } 
+        
+        next();
+    
+    }catch (error) {
+    
+        console.error("Arcjet protection error:", error);
+        next(error);
+    }
+ })
 
 app.use("/api/products" , productRoutes);
 
