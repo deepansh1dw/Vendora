@@ -16,6 +16,7 @@ function ProductPage() {
   } = useProductStore();
   const navigate = useNavigate();
   const { id } = useParams();
+  console.log("Routed to ProductPage with ID:", id);
 
   useEffect(() => {
     fetchProduct(id);
